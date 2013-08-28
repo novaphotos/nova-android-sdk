@@ -1,10 +1,10 @@
-Noon Android SDK
+Nova Android SDK
 ================
 
 Official Android SDK for Noon. 
 
 Coming soon. Watch this repository for updates.
 
-https://getnoon.com/
+https://wantnova.com/
 
-https://getnoon.com/sdk/
+https://wantnova.com/sdk/
