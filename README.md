@@ -13,48 +13,48 @@ Usage
 -----
 
 	// Initialization. One instance per app.
-	NovaLink nova = new AndroidBleNovaLink();  // For Android 4.3 onwards
+    NovaLink nova = new AndroidBleNovaLink();  // For Android 4.3 onwards
 
-	// Notify user when Nova connection changes state. See NovaLinkStatus for these states.
-	nova.registerStatusCallback(new NovaLinkStatusCallback() {
-	    void onNovaLinkStatusChange(NovaLinkStatus status) {
-	        if (status == NovaLinkStatus.Ready) {
-	            // enable camera
-	        } else {
-	            // disable camera
-	        }
-	    }
-	  }
-	});
+    // Notify user when Nova connection changes state. See NovaLinkStatus for these states.
+    nova.registerStatusCallback(new NovaLinkStatusCallback() {
+        void onNovaLinkStatusChange(NovaLinkStatus status) {
+            if (status == NovaLinkStatus.Ready) {
+                // enable camera
+            } else {
+                // disable camera
+            }
+        }
+      }
+    });
 
-	// When application wakes up (e.g. onResume()), call this to start searching for Nova devices.
-	nova.enable();
+    // When application wakes up (e.g. onResume()), call this to start searching for Nova devices.
+    nova.enable();
 
-	// Sometime later, when user wants to take a photo.
-	if (nova.getStatus() == NovaLinkStatus.Ready) {
+    // Sometime later, when user wants to take a photo.
+    if (nova.getStatus() == NovaLinkStatus.Ready) {
 
-	    // Flash brightness/color/time settings.
-	    NovaFlashCommand flashCmd = new NovaFlashCommand();
-	    flashCmd.setWarmness(255); // 0 (off) to 255 (full power)
-	    flashCmd.setCoolness(20);  // 0 (off) to 255 (full power)
-	    flashCmd.setDuration(200); // Milliseconds. Max 65535
+        // Flash brightness/color/time settings.
+        NovaFlashCommand flashCmd = new NovaFlashCommand();
+        flashCmd.setWarmness(255); // 0 (off) to 255 (full power)
+        flashCmd.setCoolness(20);  // 0 (off) to 255 (full power)
+        flashCmd.setDuration(200); // Milliseconds. Max 65535
 
-	    // Perform flash. Because there's wireless communication involved, this isn't immediate
-	    // so this method is asynchronous, and you pass a callback to get notification of result.
-	    nova.flash(flashCmd, new NovaFlashCallback() {
-	      void onNovaFlashAcknowledged(boolean successful) {
-	          if (successful) {
-	              // flash activated: trigger camera shutter
-	          } else {
-	              // show error to user
-	          }
-	      }
-	    });
-	}
+        // Perform flash. Because there's wireless communication involved, this isn't immediate
+        // so this method is asynchronous, and you pass a callback to get notification of result.
+        nova.flash(flashCmd, new NovaFlashCallback() {
+          void onNovaFlashAcknowledged(boolean successful) {
+              if (successful) {
+                  // flash activated: trigger camera shutter
+              } else {
+                  // show error to user
+              }
+          }
+        });
+    }
 
-	// When the flash is no longer needed (e.g. application goes into background with onPause()),
-	// disable the flash. This conserves battery life of both the flash and the phone.
-	nova.disable();
+    // When the flash is no longer needed (e.g. application goes into background with onPause()),
+    // disable the flash. This conserves battery life of both the flash and the phone.
+    nova.disable();
 
 
 Callbacks and threading
