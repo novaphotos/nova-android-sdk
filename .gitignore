@@ -5,3 +5,4 @@ gradle
 library/build
 camera-app/build
 *.aar
+.DS_Store
