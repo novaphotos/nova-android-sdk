@@ -29,4 +29,5 @@ public interface NovaFlashCallback {
      * @param successful Whether the flash was succesful.
      */
     void onNovaFlashAcknowledged(boolean successful);
+
 }

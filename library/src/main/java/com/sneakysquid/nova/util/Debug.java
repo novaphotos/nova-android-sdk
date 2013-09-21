@@ -52,9 +52,9 @@ public class Debug {
                 }
             });
             // TODO
-//            if (!called.get()) {
-//                throw new IllegalThreadStateException("Not on UI thread");
-//            }
+//          if (!called.get()) {
+//              throw new IllegalThreadStateException("Not on UI thread");
+//          }
         }
     }
 
@@ -75,6 +75,5 @@ public class Debug {
         }
         return tag;
     }
-
 
 }

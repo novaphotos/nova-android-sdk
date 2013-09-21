@@ -288,4 +288,5 @@ public class AndroidBleNovaLink extends BluetoothGattCallback implements NovaLin
             }
         }
     }
+
 }

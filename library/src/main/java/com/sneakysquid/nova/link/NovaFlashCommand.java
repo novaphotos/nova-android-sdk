@@ -143,4 +143,5 @@ public final class NovaFlashCommand implements Serializable {
                 0
         };
     }
+
 }

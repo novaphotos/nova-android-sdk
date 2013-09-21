@@ -25,5 +25,7 @@ package com.sneakysquid.nova.link;
  * @author Joe Walnes
  */
 public interface NovaLinkStatusCallback {
+
     void onNovaLinkStatusChange(NovaLinkStatus status);
+
 }

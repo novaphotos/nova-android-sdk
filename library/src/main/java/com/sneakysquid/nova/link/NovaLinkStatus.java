@@ -63,4 +63,5 @@ public enum NovaLinkStatus {
      * (most likely performing a flash).
      */
     Busy
+
 }
