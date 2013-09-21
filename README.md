@@ -8,6 +8,11 @@ For more background see the [Nova SDK page](https://wantnova.com/sdk/).
 This library hides the complexities of the BluetoothLE discovery and communication, making
 it simple to interface with a Nova device to add flash capabilities to your application.
 
+This repository contains two projects:
+
+*   `library`: The core API for interacting with Nova. This is designed to be embedded in
+    other camera apps.
+*   `camera-app`: The standalone Nova camera app. This is a reference application for the library.
 
 Usage
 -----
@@ -62,6 +67,18 @@ Callbacks and threading
 
 `NovaLink` is designed to be used on a single thread only. All the callbacks will also be
 dispatched on the same thread. On Android this is the main/UI thread.
+
+
+Including in your app
+---------------------
+
+There are two ways you can use the library in your own application.
+
+1.  Copy source code. Simply copy the source code in the `library` project in to your
+    own project. Because it has no external dependencies, this is the least hassle
+    and it avoid you having to understand the build tools.
+
+2.  Build into Android `.aar` library. Run `make`.
 
 
 License
