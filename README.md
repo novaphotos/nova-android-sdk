@@ -81,6 +81,13 @@ There are two ways you can use the library in your own application.
 2.  Build into Android `.aar` library. Run `make`.
 
 
+Developing
+----------
+
+Run `make` to perform initial build. If you use Android Studio, you can open the project
+and work from there. Alternatively use editor of your choice and `make` for builds.
+
+
 License
 -------
 

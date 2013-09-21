@@ -6,3 +6,6 @@ library/build
 camera-app/build
 *.aar
 .DS_Store
+local.properties
+.idea/workspace.xml
+.idea/tasks.xml
