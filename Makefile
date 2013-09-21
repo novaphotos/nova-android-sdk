@@ -63,11 +63,22 @@ nova-library.aar: library/build/libs/library.aar
 
 
 #####################################
+### Build sample camera app
+
+camera-app/build/apk/camera-app-release-unsigned.apk: gradle $(shell find camera-app/src -type f) camera-app/build.gradle
+	./gradle build
+	touch $@
+
+nova-camera-app.apk: camera-app/build/apk/camera-app-release-unsigned.apk
+	cp $^ $@
+
+
+#####################################
 ### Cleanup
 
 # Delete built files
 clean:
-	rm -rf .gradle library/build $(wildcard *.aar)
+	rm -rf .gradle library/build camera-app/build $(wildcard *.aar) $(wildcard *.apk)
 .PHONY: clean
 
 # Delete built files and Gradle installation
