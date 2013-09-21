@@ -1,0 +1,6 @@
+gradle-*
+gradle
+*.swp
+.gradle
+library/build
+*.aar
