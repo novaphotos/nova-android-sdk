@@ -18,9 +18,19 @@
 # is installed.
 #
 # This Makefile will automatically download and install Gradle.
-# Usage:
-#    make       : Build Nova library
-#    make clean : Clean up built files
+# Common targets:
+#
+#    make library : Build Nova library
+#
+#    make app     : Build example camera app
+#    make install : Install app on device attached to USB
+#    make start   : Start app on device
+#    make logcat  : Tail log file, filtering for app related debug msgs
+#
+#    make clean   : Clean up built files
+#
+#    make run     : Full build, install on device, start and monitor logs.
+#                   (equivalent of: make app install start logcat)
 # -Joe Walnes
 
 ifndef ANDROID_HOME
@@ -29,7 +39,7 @@ endif
 
 GRADLE_VERSION=1.7
 
-all: gradle adb nova-library.aar nova-camera-app-debug.apk
+all: gradle adb library app
 .PHONY: all
 
 
@@ -63,19 +73,22 @@ library/build/libs/library.aar: gradle $(shell find library/src -type f) library
 nova-library.aar: library/build/libs/library.aar
 	cp $^ $@
 
+library: nova-library.aar
+.PHONY: library
+
 
 #####################################
 ### Build sample camera app
 
-camera-app/build/apk/camera-app-release-unsigned.apk camera-app/build/apk/camera-app-debug-unaligned.apk: gradle $(shell find camera-app/src -type f) camera-app/build.gradle
+camera-app/build/apk/camera-app-debug-unaligned.apk: gradle $(shell find camera-app/src library/src -type f) camera-app/build.gradle
 	./gradle build
 	touch $@
 
 nova-camera-app-debug.apk: camera-app/build/apk/camera-app-debug-unaligned.apk
 	cp $^ $@
 
-nova-camera-app-release.apk: camera-app/build/apk/camera-app-release-unsigned.apk
-	cp $^ $@
+app: nova-camera-app-debug.apk
+.PHONY: app
 
 
 #####################################
@@ -93,11 +106,18 @@ start: install
 	./adb shell am start -n com.sneakysquid.nova.app/com.sneakysquid.nova.app.MainActivity
 .PHONY: run
 
+logclear:
+	./adb logcat -c
+
 logcat:
 	find library camera-app -type f -name '*.java' \
 		| xargs grep -l debug \
 		| sed -e 's|^.*/||;s|\.java||' \
-		| xargs ./adb logcat -v time -s
+		| xargs ./adb logcat -v time -s AndroidRuntime
+
+run: install logclear start logcat
+.PHONY: run
+
 
 #####################################
 ### Cleanup
