@@ -67,7 +67,7 @@ nova-library.aar: library/build/libs/library.aar
 #####################################
 ### Build sample camera app
 
-camera-app/build/apk/camera-app-release-unsigned.apk: gradle $(shell find camera-app/src -type f) camera-app/build.gradle
+camera-app/build/apk/camera-app-release-unsigned.apk camera-app/build/apk/camera-app-debug-unaligned.apk: gradle $(shell find camera-app/src -type f) camera-app/build.gradle
 	./gradle build
 	touch $@
 
