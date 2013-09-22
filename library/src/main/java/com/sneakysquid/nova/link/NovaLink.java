@@ -77,10 +77,13 @@ package com.sneakysquid.nova.link;
 public interface NovaLink {
 
     /**
-     *
+     * Enable Nova. This will activate BluetoothLE, begin scanning and attempt to connect.
      */
     void enable();
 
+    /**
+     * Disable Nova. Disconnects (if connected) and stops scanning. Conserves battery life.
+     */
     void disable();
 
     /**
