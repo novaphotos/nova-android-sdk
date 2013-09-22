@@ -106,6 +106,7 @@ public class AndroidBleNovaLink implements NovaLink {
     public void disable() {
         assertOnUiThread();
         debug("disable()");
+        // TODO: Disconnect, stop scanning
     }
 
     /**
@@ -163,12 +164,12 @@ public class AndroidBleNovaLink implements NovaLink {
         debug("onScannedDevice(%s,%s,%s,%s)", device, device.getName(), rssi, scanRecord);
 
         if (status != NovaLinkStatus.Scanning) {
-            debug("ignoring device because we've already found another");
+            debug(" ignoring device because we've already found another");
             return;
         }
 
         if (isNova(device)) {
-            debug("scanned Nova");
+            debug(" scanned Nova");
 
             if (currentScan != null) {
                 debug("stop scanning");
@@ -247,7 +248,7 @@ public class AndroidBleNovaLink implements NovaLink {
 
     private void onServicesDiscovered(BluetoothGatt gatt, int status) {
         assertOnUiThread();
-        debug("onServicesDiscovered()");
+        debug(" onServicesDiscovered()");
 
         if (status != BluetoothGatt.GATT_SUCCESS) {
             debug("failed to discover services");
@@ -255,13 +256,13 @@ public class AndroidBleNovaLink implements NovaLink {
         } else {
             boolean found = false;
             for (BluetoothGattService service : gatt.getServices()) {
-                debug("service: %s", service.getUuid());
+                debug("  service: %s", service.getUuid());
                 if (service.getUuid().toString().startsWith("0000fff0-")) {
-                    debug("found Nova service");
+                    debug("   found Nova service");
                     for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                        debug("characteristic: %s", characteristic.getUuid());
+                        debug("   characteristic: %s", characteristic.getUuid());
                         if (characteristic.getUuid().toString().startsWith("0000fff3-")) {
-                            debug("found Nova characteristic");
+                            debug("    found Nova characteristic");
                             found = true;
                             this.characteristic = characteristic;
                         }
