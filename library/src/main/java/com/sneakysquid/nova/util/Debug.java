@@ -19,6 +19,8 @@ package com.sneakysquid.nova.util;
 import android.app.Activity;
 import android.util.Log;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -37,43 +39,22 @@ public class Debug {
      * Check that the caller of this method is running on the UI thread associated
      * with an Activity. Throws IllegalThreadStateException if on any other thread.
      */
-    public static void assertOnUiThread(Activity activity) throws IllegalThreadStateException {
-        debug("This thread %d", Thread.currentThread().getId());
-        synchronized (activity) {
-            final Thread myThread = Thread.currentThread();
-            final AtomicBoolean called = new AtomicBoolean(false);
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    debug("UI thread %d", Thread.currentThread().getId());
-                    if (Thread.currentThread() != myThread) {
-                        called.set(true);
-                    }
-                }
-            });
-            // TODO
-//          if (!called.get()) {
-//              throw new IllegalThreadStateException("Not on UI thread");
-//          }
+    public static void assertOnUiThread() throws IllegalThreadStateException {
+        if (Thread.currentThread().getId() != 1) {
+            throw new RuntimeException("Not on UI Thread (on thread " + Thread.currentThread().getId() + ")");
         }
     }
 
     /**
      * Generate a short tag name automatically by looking at the call stack and
-     * determining the class that called this method.
+     * determining the file that this was called from.
      *
      * @param stackDepth How many levels down the call stack to go. 0 is this call,
      *                   1 is the caller, 2 is the caller's caller, etc.
      */
     private static String obtainTagFromCallStack(int stackDepth) {
-        String cls = new Throwable().getStackTrace()[stackDepth].getClassName();
-        String tag;
-        try {
-            tag = Class.forName(cls).getSimpleName();
-        } catch (ClassNotFoundException e) {
-            tag = cls;
-        }
-        return tag;
+        String fileName = new Throwable().getStackTrace()[stackDepth].getFileName();
+        return fileName.replaceFirst("^.*/", "").replaceFirst("\\.java$", "");
     }
 
 }
