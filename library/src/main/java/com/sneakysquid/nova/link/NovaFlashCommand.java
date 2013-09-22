@@ -91,6 +91,13 @@ public final class NovaFlashCommand implements Serializable {
         this.duration = duration;
     }
 
+    /**
+     * Is the flash pointless? i.e. LEDs are off, or duration is 0.
+     */
+    public boolean isPointless() {
+        return duration == 0 || (coolness == 0 && warmness == 0);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

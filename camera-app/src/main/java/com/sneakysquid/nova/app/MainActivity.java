@@ -22,22 +22,25 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.sneakysquid.nova.link.NovaFlashCallback;
 import com.sneakysquid.nova.link.NovaFlashCommand;
 import com.sneakysquid.nova.link.NovaLink;
 import com.sneakysquid.nova.link.NovaLinkStatus;
 import com.sneakysquid.nova.link.NovaLinkStatusCallback;
 import com.sneakysquid.nova.link.android.AndroidBleNovaLink;
 
+import static com.sneakysquid.nova.util.Debug.assertOnUiThread;
 import static com.sneakysquid.nova.util.Debug.debug;
 
-public class MainActivity extends Activity implements Camera.ShutterCallback, NovaLinkStatusCallback {
+/**
+ * @author Joe Walnes
+ */
+public class MainActivity extends Activity implements NovaLinkStatusCallback {
 
-    private ErrorReporter errorReporter;
-    private Camera camera;  // May be null
-    private CameraPreview preview;
-    private Camera.PictureCallback photoSaver;
-    private NovaLink novaLink;
+    protected ErrorReporter errorReporter;
+    protected Camera camera;  // May be null
+    protected CameraPreview preview;
+    protected PhotoSaver photoSaver;
+    protected NovaLink novaLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class MainActivity extends Activity implements Camera.ShutterCallback, No
         if (camera == null) {
             errorReporter.reportError("Camera not found");
         } else {
+            configureCamera(camera);
             preview.beginPreview(camera);
         }
 
@@ -96,48 +100,46 @@ public class MainActivity extends Activity implements Camera.ShutterCallback, No
         novaLink.disable();
     }
 
+    protected void configureCamera(Camera camera) {
+        Camera.Parameters parameters = camera.getParameters();
+
+        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+
+        camera.setParameters(parameters);
+    }
+
     public void onCameraButtonClick() {
         debug("onCameraButtonClick()");
         if (camera == null) {
             errorReporter.reportError("Camera not found");
         } else {
-            NovaFlashCommand flashCmd = new NovaFlashCommand(255, 255, 500); // TODO
-            novaLink.flash(flashCmd, new NovaFlashCallback() {
+            NovaFlashCommand flashCmd = flashCommand();
+            // Take photo
+            Runnable takePhoto = takePhotoCommand(flashCmd, new TakePhoto.Callback() {
                 @Override
-                public void onNovaFlashAcknowledged(boolean successful) {
-                    debug(successful ? "flash SUCCESS" : "flash FAIL"); // TODO
+                public void onPhotoTaken(byte[] jpeg) {
+                    debug("onPhotoTaken()");
+                    assertOnUiThread();
+
+                    // When finished...
+                    // Save
+                    photoSaver.save(jpeg);
+                    // Resume preview
+                    if (camera != null) {
+                        preview.beginPreview(camera);
+                    }
                 }
             });
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        // TODO
-                    }
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            debug("take picture");
-                            camera.takePicture(MainActivity.this, null, photoSaver);
-                        }
-                    });
-                }
-            }).start();
-
+            takePhoto.run();
         }
     }
 
-    @Override
-    public void onShutter() {
-        debug("onShutter()");
+    protected NovaFlashCommand flashCommand() {
+        return new NovaFlashCommand(255, 255, 500);  // TODO: Values from UI
+    }
 
-        // Resume preview
-        if (camera != null) {
-            preview.beginPreview(camera);
-        }
+    protected TakePhoto takePhotoCommand(NovaFlashCommand flashCmd, TakePhoto.Callback result) {
+        return new TakePhoto(this, camera, novaLink, flashCmd, result);
     }
 
     @Override

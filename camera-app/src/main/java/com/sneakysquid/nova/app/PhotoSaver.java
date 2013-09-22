@@ -30,7 +30,7 @@ import static com.sneakysquid.nova.util.Debug.debug;
 /**
  * @author Joe Walnes
  */
-public class PhotoSaver implements Camera.PictureCallback {
+public class PhotoSaver {
 
     protected final File dir;
     protected final String suffix;
@@ -51,12 +51,11 @@ public class PhotoSaver implements Camera.PictureCallback {
         this.suffix = suffix;
     }
 
-    @Override
-    public void onPictureTaken(byte[] data, Camera camera) {
+    public void save(byte[] jpeg) {
         File file = uniqueFile();
         debug("onPictureTaken() saving to %s", file);
 
-        if (!writeToFile(file, data)) {
+        if (!writeToFile(file, jpeg)) {
             errorReporter.reportError("Could not save photo");
         }
     }
