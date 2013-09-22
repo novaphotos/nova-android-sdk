@@ -5,7 +5,9 @@ gradle
 library/build
 camera-app/build
 *.aar
+*.apk
 .DS_Store
 local.properties
 .idea/workspace.xml
 .idea/tasks.xml
+adb

@@ -29,7 +29,7 @@ endif
 
 GRADLE_VERSION=1.7
 
-all: nova-library.aar
+all: gradle adb nova-library.aar nova-camera-app-debug.apk
 .PHONY: all
 
 
@@ -50,6 +50,8 @@ tools/gradle-$(GRADLE_VERSION)/bin/gradle: tools/gradle-$(GRADLE_VERSION).zip
 gradle: tools/gradle-$(GRADLE_VERSION)/bin/gradle
 	ln -sf $^ $@
 
+adb:
+	ln -sf "$(ANDROID_HOME)/platform-tools/adb" $@
 
 #####################################
 ### Build library
@@ -69,9 +71,33 @@ camera-app/build/apk/camera-app-release-unsigned.apk: gradle $(shell find camera
 	./gradle build
 	touch $@
 
-nova-camera-app.apk: camera-app/build/apk/camera-app-release-unsigned.apk
+nova-camera-app-debug.apk: camera-app/build/apk/camera-app-debug-unaligned.apk
 	cp $^ $@
 
+nova-camera-app-release.apk: camera-app/build/apk/camera-app-release-unsigned.apk
+	cp $^ $@
+
+
+#####################################
+### Run sample camera app on Android device
+
+install: adb nova-camera-app-debug.apk
+	./adb install -r nova-camera-app-debug.apk
+.PHONY: install
+
+uninstall: adb
+	./adb uninstall com.sneakysquid.nova.app
+.PHONY: uninstall
+
+start: install
+	./adb shell am start -n com.sneakysquid.nova.app/com.sneakysquid.nova.app.MainActivity
+.PHONY: run
+
+logcat:
+	find library camera-app -type f -name '*.java' \
+		| xargs grep -l debug \
+		| sed -e 's|^.*/||;s|\.java||' \
+		| xargs ./adb logcat -v time -s
 
 #####################################
 ### Cleanup
@@ -83,6 +109,6 @@ clean:
 
 # Delete built files and Gradle installation
 clobber: clean
-	rm -rf tools gradle
+	rm -rf tools gradle adb
 .PHONY: clobber
 
