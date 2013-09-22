@@ -118,7 +118,7 @@ public class AndroidBleNovaLink implements NovaLink {
         scan();
     }
 
-    public void scan() {
+    private void scan() {
         assertOnUiThread();
         debug("scan()");
 

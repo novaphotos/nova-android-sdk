@@ -24,6 +24,7 @@ import android.widget.FrameLayout;
 
 import com.sneakysquid.nova.link.NovaFlashCallback;
 import com.sneakysquid.nova.link.NovaFlashCommand;
+import com.sneakysquid.nova.link.NovaLink;
 import com.sneakysquid.nova.link.NovaLinkStatus;
 import com.sneakysquid.nova.link.NovaLinkStatusCallback;
 import com.sneakysquid.nova.link.android.AndroidBleNovaLink;
@@ -36,7 +37,7 @@ public class MainActivity extends Activity implements Camera.ShutterCallback, No
     private Camera camera;  // May be null
     private CameraPreview preview;
     private Camera.PictureCallback photoSaver;
-    private AndroidBleNovaLink novaLink;
+    private NovaLink novaLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,6 @@ public class MainActivity extends Activity implements Camera.ShutterCallback, No
         }
 
         novaLink.enable();
-        novaLink.scan();
     }
 
     @Override
