@@ -5,6 +5,8 @@ Official Android SDK for [Nova](https://wantnova.com).
 
 For more background see the [Nova SDK page](https://wantnova.com/sdk/).
 
+**[Nova is still funding on Kickstarter until October 6 - back it while you can!](http://kck.st/1dOtham)**
+
 This library hides the complexities of the BluetoothLE discovery and communication, making
 it simple to interface with a Nova device to add flash capabilities to your application.
 
