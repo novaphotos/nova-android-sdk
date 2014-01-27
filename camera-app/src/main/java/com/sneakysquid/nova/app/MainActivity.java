@@ -109,7 +109,9 @@ public class MainActivity extends Activity implements NovaLinkStatusCallback {
     protected void configureCamera(Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
 
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        for (String focusMode: parameters.getSupportedFocusModes())
+            if (focusMode.equals(Camera.Parameters.FOCUS_MODE_AUTO))
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 
         camera.setParameters(parameters);
     }
