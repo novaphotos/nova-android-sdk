@@ -77,6 +77,12 @@ public class MainActivity extends Activity implements NovaLinkStatusCallback {
 
         camera = Camera.open();
         if (camera == null) {
+            debug("No back facing camera, try any");
+            int numCameras = Camera.getNumberOfCameras();
+            if (numCameras > 0)
+                camera = Camera.open(0);
+        }
+        if (camera == null) {
             errorReporter.reportError("Camera not found");
         } else {
             configureCamera(camera);
@@ -103,7 +109,9 @@ public class MainActivity extends Activity implements NovaLinkStatusCallback {
     protected void configureCamera(Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
 
-        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        for (String focusMode: parameters.getSupportedFocusModes())
+            if (focusMode.equals(Camera.Parameters.FOCUS_MODE_AUTO))
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
 
         camera.setParameters(parameters);
     }
