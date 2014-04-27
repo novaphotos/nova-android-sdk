@@ -67,7 +67,7 @@ public class AndroidBleNovaLink implements NovaLink {
     public AndroidBleNovaLink(Activity activity) {
         this.activity = activity;
         BluetoothManager bluetoothManager = (BluetoothManager) activity.getSystemService(BLUETOOTH_SERVICE);
-        bluetoothAdapter = bluetoothManager.getAdapter();
+        bluetoothAdapter = (bluetoothManager == null) ? null : bluetoothManager.getAdapter();
         status = NovaLinkStatus.Disconnected;
     }
 

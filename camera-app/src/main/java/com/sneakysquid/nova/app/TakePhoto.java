@@ -80,7 +80,7 @@ public class TakePhoto implements Runnable, Camera.AutoFocusCallback, NovaFlashC
         if (flashCmd == null || flashCmd.isPointless()
                 || novaLink.getStatus() != NovaLinkStatus.Ready) {
             // Flash not needed, or not possible. Skip to step 3 and just take the photo.
-            takePhoto();
+            takePicture();
         } else {
             // Step 2: Trigger flash
             novaLink.flash(flashCmd, this); // -> callback: onNovaFlashAcknowledged
