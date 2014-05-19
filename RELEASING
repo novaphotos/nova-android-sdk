@@ -1,0 +1,4 @@
+To release a new version:
+
+* git tag 0.0.X
+* git push --tags
