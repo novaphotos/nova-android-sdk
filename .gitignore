@@ -1,13 +1,5 @@
-gradle-*
-gradle
-*.swp
 .gradle
-library/build
-camera-app/build
-*.aar
-*.apk
+/local.properties
+/.idea/workspace.xml
 .DS_Store
-local.properties
-.idea/workspace.xml
-.idea/tasks.xml
-adb
+*.swp

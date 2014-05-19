@@ -10,15 +10,23 @@ it simple to interface with a Nova device to add flash capabilities to your appl
 
 This repository contains two projects:
 
-*   `library`: The core API for interacting with Nova. This is designed to be embedded in
+*   `nova-sdk`: The core SDK for interacting with Nova. This is designed to be embedded in
     other camera apps.
-*   `camera-app`: The standalone Nova camera app. This is a reference application for the library.
+*   `nova-testapp`: A standalone Android app for manually invoking the SDK and viewing the
+    result. You can use this to trigger the flash.
+
+Requirements
+------------
+
+Nova uses Bluetooth Low Energy which is only available in Andriod 4.3 (API level 18) and
+onwards.
+
 
 Usage
 -----
 
-	// Initialization. One instance per app.
-    NovaLink nova = new AndroidBleNovaLink();  // For Android 4.3 onwards
+    // Initialization. One instance per app.
+    NovaLink nova = new BluetoothLeNovaLink();
 
     // Notify user when Nova connection changes state. See NovaLinkStatus for these states.
     nova.registerStatusCallback(new NovaLinkStatusCallback() {
@@ -39,17 +47,17 @@ Usage
     if (nova.getStatus() == NovaLinkStatus.Ready) {
 
         // Flash brightness/color/time settings.
-        NovaFlashCommand flashCmd = new NovaFlashCommand();
-        flashCmd.setWarmness(255); // 0 (off) to 255 (full power)
-        flashCmd.setCoolness(20);  // 0 (off) to 255 (full power)
-        flashCmd.setDuration(200); // Milliseconds. Max 65535
+        NovaFlashCommand flashCmd = NovaFlashCommand.warm();
 
         // Perform flash. Because there's wireless communication involved, this isn't immediate
         // so this method is asynchronous, and you pass a callback to get notification of result.
-        nova.flash(flashCmd, new NovaFlashCallback() {
-          void onNovaFlashAcknowledged(boolean successful) {
+        nova.beginFlash(flashCmd, new NovaCompletionCallback() {
+          void onComplete(boolean successful) {
               if (successful) {
                   // flash activated: trigger camera shutter
+
+                  // after camera has taken photo
+                  nova.endFlash();
               } else {
                   // show error to user
               }
@@ -65,33 +73,13 @@ Usage
 Callbacks and threading
 -----------------------
 
-`NovaLink` is designed to be used on a single thread only. All the callbacks will also be
-dispatched on the same thread. On Android this is the main/UI thread.
-
-
-Including in your app
----------------------
-
-There are two ways you can use the library in your own application.
-
-1.  Copy source code. Simply copy the source code in the `library` project in to your
-    own project. Because it has no external dependencies, this is the least hassle
-    and it avoid you having to understand the build tools.
-
-2.  Build into Android `.aar` library. Run `make`.
-
-
-Developing
-----------
-
-Run `make` to perform initial build. If you use Android Studio, you can open the project
-and work from there. Alternatively use editor of your choice and `make` for builds.
-
+`NovaLink` should only ever be called from the Android main UI thread. All callbacks will
+also be invoked on this thread.
 
 License
 -------
 
-    Copyright 2013 Sneaky Squid LLC.
+    Copyright 2013-2014 Sneaky Squid LLC.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

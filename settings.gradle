@@ -1,2 +1,1 @@
-include ':library'
-include ':camera-app'
+include ':nova-testapp', ':nova-sdk'
