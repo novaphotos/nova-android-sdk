@@ -590,6 +590,15 @@ public class BluetoothLENovaLink implements NovaLink {
     private void request(String msg, NovaCompletionCallback callback) {
         assertOnUiThread();
 
+        if (callback == null) {
+            callback = new NovaCompletionCallback() {
+                @Override
+                public void onComplete(boolean successful) {
+                    // no-op
+                }
+            };
+        }
+
         if (this.status != NovaLinkStatus.Ready) {
             callback.onComplete(false);
             return;
