@@ -131,7 +131,7 @@ public final class NovaFlashCommand implements Serializable {
      * A slight warm light, ideal for closeup photos.
      */
     public static NovaFlashCommand gentle() {
-        return new NovaFlashCommand(127, 0);
+        return new NovaFlashCommand(31, 31);
     }
 
     /**
@@ -139,7 +139,15 @@ public final class NovaFlashCommand implements Serializable {
      * A bright natural looking warm light, ideal for people portraits at night.
      */
     public static NovaFlashCommand warm() {
-        return new NovaFlashCommand(255, 0);
+        return new NovaFlashCommand(255, 127);
+    }
+
+    /**
+     * Preset settings for 'neutral' flash.
+     * Cool LEDs for a whiter white.
+     */
+    public static NovaFlashCommand neutral() {
+        return new NovaFlashCommand(0, 255);
     }
 
     /**
@@ -165,5 +173,11 @@ public final class NovaFlashCommand implements Serializable {
         return new NovaFlashCommand(warm, cool, duration);
     }
 
+    /**
+     * Creates a new instance of this warm/cool config, but with a different duration.
+     */
+    public NovaFlashCommand withDuration(int duration) {
+        return new NovaFlashCommand(warmness, coolness, duration);
+    }
 
 }
