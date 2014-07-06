@@ -503,7 +503,7 @@ public class BluetoothLENovaLink implements NovaLink {
         processSendQueue();
 
         // Trigger user callback.
-        callback.onComplete(false);
+        callback.onComplete(true);
     }
 
     private void disconnect() {
