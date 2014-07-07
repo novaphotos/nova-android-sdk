@@ -204,8 +204,6 @@ public class BluetoothLENovaLink implements NovaLink {
     void startScan() {
         assertOnUiThread();
 
-        debug("start scan");
-
         if (stopScanTimerAllow.get()) {
             return; // Scan is already in progress.
         }
@@ -223,6 +221,8 @@ public class BluetoothLENovaLink implements NovaLink {
         if (status != NovaLinkStatus.Idle) {
             return; // Either BT is disabled, or we're already attempting to connect.
         }
+
+        debug("start scan");
 
         strongestSignalDevice = null;
         strongestSignalRSSI = 0;
